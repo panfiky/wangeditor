@@ -20,7 +20,7 @@ function Image(editor) {
 // 原型
 Image.prototype = {
     constructor: Image,
-
+    alt_ID:null,
     onClick: function () {
         const editor = this.editor
         const config = editor.config
@@ -29,6 +29,9 @@ Image.prototype = {
         }
         if (this._active) {
             this._createEditPanel()
+            // 初始化标签的输入框值
+            //$('#'+this.alt_ID).val(editor._selectedImg.attr('alt'))
+            document.querySelector('#'+this.alt_ID).value=editor._selectedImg.attr('alt')
         } else {
             this._createInsertPanel()
         }
@@ -42,6 +45,9 @@ Image.prototype = {
         const width50 = getRandom('width-50')
         const width100 = getRandom('width-100')
         const delBtn = getRandom('del-btn')
+        const alt_photo =getRandom('alt_photo')
+        this.alt_ID=alt_photo
+        const altBtn = getRandom('altBtn')
 
         // tab 配置
         const tabsConfig = [
@@ -54,6 +60,7 @@ Image.prototype = {
                         <button id="${width50}" class="left">50%</button>
                         <button id="${width100}" class="left">100%</button>
                     </div>
+                    <div><input id="${alt_photo}" width="40px" type="text"  placeholder="标签" /><button id="${altBtn}" class="gray left">确定</button></div>
                     <div class="w-e-button-container">
                         <button id="${delBtn}" class="gray left">删除图片</button>
                     </dv>
@@ -106,7 +113,20 @@ Image.prototype = {
                             // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
                             return true
                         }
-                    }
+                    },
+                    {
+                        selector:'#'+altBtn,
+                        type:'click',
+                        fn:()=>{
+                            let alt_txt= $('#' + alt_photo).val()
+                            const $img = editor._selectedImg
+                            if($img) {
+                                $img.attr('alt',alt_txt)
+                            }
+                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
+                            return true
+                        }
+                    },
                 ]
             }
         ]
@@ -239,6 +259,8 @@ Image.prototype = {
     tryChangeActive: function (e) {
         const editor = this.editor
         const $elem = this.$elem
+        // const $img = editor._selectedImg
+        // $('#' + alt_photo).value=$img.Attribute('alt')
         if (editor._selectedImg) {
             this._active = true
             $elem.addClass('w-e-active')

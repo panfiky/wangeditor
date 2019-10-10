@@ -51,8 +51,8 @@ UploadImg.prototype = {
                 return
             }
         }
-
-        editor.cmd.do('insertHTML', `<img src="${link}" style="max-width:100%;"/>`)
+        //加入alt=""
+        editor.cmd.do('insertHTML', `<img src="${link}" style="max-width:100%;" alt=""/>`)
 
         // 验证图片 url 是否有效，无效的话给出提示
         let img = document.createElement('img')
